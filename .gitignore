@@ -1,0 +1,10 @@
+node_modules
+build
+zip
+.idea
+.gulp
+psd
+package-lock.json
+bash.exe.stackdump
+*.rar
+*.zip

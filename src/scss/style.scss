@@ -1,0 +1,33 @@
+@import 'libs';
+@import 'fonts';
+@import 'mixins';
+@import 'sprites';
+
+$main-color: #48AAE6;
+$add-button-color: #F3A500;
+$add-button-hover-color: #F6C052;
+$del-button-color: #B20000;
+$del-button-hover-color: #CA4C49;
+
+*,
+*::before,
+*::after {
+	box-sizing: inherit;
+}
+html {
+	box-sizing: border-box;
+}
+body {
+	margin: 0;
+	padding: 0;
+}
+img {
+	max-width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+	font-family: MetaPro, sans-serif;
+	font-weight: 700;
+}
+
+@import "blocks";
+@import 'pages';
