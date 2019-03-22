@@ -1,8 +1,3 @@
-@import 'libs';
-@import 'fonts';
-@import 'mixins';
-@import 'sprites';
-
 $main-color: #48AAE6;
 $add-button-color: #F3A500;
 $add-button-hover-color: #F6C052;
@@ -24,10 +19,93 @@ body {
 img {
 	max-width: 100%;
 }
-h1, h2, h3, h4, h5, h6 {
-	font-family: MetaPro, sans-serif;
-	font-weight: 700;
+
+//----------------------------
+.table__container {
+	position: relative;
+	display: inline-block;
+	padding: 60px 0 0 60px;
+}
+.table {
+	border: 1px solid $main-color;
+	display: inline-block;
+	position: relative;
+	z-index: 999;
+}
+.table__row {
+	display: flex;
+	width: fit-content;
+}
+%table__cell {
+	width: 50px;
+	height: 50px;
+	border: 1px solid #fff;
+}
+.table__cell {
+	@extend %table__cell;
+	background-color: $main-color;
+}
+.table__add-buttons {
+	position: relative;
+
+}
+.table__button {
+	@extend %table__cell;
+	transition: all 0.3s linear;
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	span {
+		display: block;
+		width: 10px;
+		height: 2px;
+		background-color: #fff;
+		position: absolute;
+	}
+	&:hover {
+		cursor: pointer;
+	}
+}
+%table__add-button {
+	background-color: $add-button-color;
+	span {
+		&:last-child {
+			transform: rotate(90deg);
+		}
+	}
+	&:hover {
+		background-color: $add-button-hover-color;
+	}
+}
+.table__add-row {
+	@extend %table__add-button;
+	bottom: -48px;
+	left: 61px;
+}
+.table__add-col {
+	@extend %table__add-button;
+	top: 61px;
+	right: -50px;
+}
+%table__del-button {
+	background-color: $del-button-color;
+	&:hover {
+		background-color: $del-button-hover-color;
+	}
+}
+.table__del-row {
+	@extend %table__del-button;
+	top: 60px;
+	left: 11px;
+}
+.table__del-col {
+	@extend %table__del-button;
+	top: 11px;
+	left: 60px;
+}
+#del-btn {
+	display: none;
 }
 
-@import "blocks";
-@import 'pages';
+//-------------------------------------------------------------

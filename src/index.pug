@@ -1,12 +1,46 @@
-extends pug/_pattern
-
-append vars
-	- var index = 'active-menu-item'
-
-block title
-	title JS mission
-
-block content
-	include pug/_header
-	main
-	include pug/_footer
+doctype
+html(lang="ru")
+	head
+		meta(charset="utf-8")
+		meta(http-equiv="X-UA-Compatible" content="IE=edge")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		link(href=`css/style.css?v=${Date.now()}` rel="stylesheet")
+		title JS mission
+	body
+		header.header
+			.table__container
+				.table#table
+					.table__row(data-row="0")
+						.table__cell(data-col="0")
+						.table__cell(data-col="1")
+						.table__cell(data-col="2")
+						.table__cell(data-col="3")
+					.table__row(data-row="1")
+						.table__cell(data-col="0")
+						.table__cell(data-col="1")
+						.table__cell(data-col="2")
+						.table__cell(data-col="3")
+					.table__row(data-row="2")
+						.table__cell(data-col="0")
+						.table__cell(data-col="1")
+						.table__cell(data-col="2")
+						.table__cell(data-col="3")
+					.table__row(data-row="3")
+						.table__cell(data-col="0")
+						.table__cell(data-col="1")
+						.table__cell(data-col="2")
+						.table__cell(data-col="3")
+				.table__buttons#buttons
+					#add-btn
+						.table__button.table__add-row#add-row
+							span
+							span
+						.table__button.table__add-col#add-col
+							span
+							span
+					#del-btn
+						.table__button.table__del-row#del-row
+							span
+						.table__button.table__del-col#del-col
+							span
+		script(src=`js/main.js?v=${Date.now()}`)
