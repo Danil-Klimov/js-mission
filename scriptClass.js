@@ -1,47 +1,40 @@
 "use strict";
 class Table {
-    constructor(row = 4, col = 4) {
-        this.row = row;
-        this.col = col;
+    constructor(rows = 4, cols = 4) {
+        this.rows = rows;
+        this.cols = cols;
     }
     createTable(container) {
-        let mainContainer = document.getElementById(container);
-        let tableContainer = document.createElement("div");
-        let table = document.createElement("table");
+        const tableContainer = document.createElement("div");
+        const table = document.createElement("table");
         tableContainer.classList.add("table__container");
-        mainContainer.appendChild(tableContainer);
-        for (let i = 0; i < this.row; i++) {
-            table.insertRow();
-            for (let j = 0; j < this.col; j++) {
-                let tbody = table.querySelector("tbody");
-                tbody.rows[i].insertCell();
-            }
-        }
+        document.getElementById(container).appendChild(tableContainer);
+        table.innerHTML = Array(this.rows).fill(`<tr>${Array(this.cols).fill("<td></td>").join('')}</tr>`).join('');
         tableContainer.appendChild(table).classList.add("table");
         this.constructor.createButtons(tableContainer);
-        tableContainer.onclick = (e) => {
-            let target = e.target;
-            let tbody = tableContainer.querySelector("tbody");
-            this.constructor.addRow(target, tbody, tableContainer);
-            this.constructor.addCol(target, tableContainer);
-            this.constructor.delRow(target, tbody, tableContainer);
-            this.constructor.delCol(target, tableContainer);
-        };
-        tableContainer.onmouseover = (e) => {
-            let target = e.target;
-            let rowsLength = tableContainer.querySelector("tbody").rows.length;
-            let colsLength = tableContainer.querySelector("tr").cells.length;
-            let delRowButton = tableContainer.querySelector(".del_row");
-            let delColButton = tableContainer.querySelector(".del_col");
-            if(!target.classList.contains('add')) {
-                let delButtons = [...tableContainer.querySelectorAll(".del")];
-                delButtons.forEach((index) => {
-                    index.classList.add("show");
-                })
+        const delRowButton = tableContainer.querySelector(".del_row");
+        const delColButton = tableContainer.querySelector(".del_col");
+        const delButtons = [...tableContainer.querySelectorAll(".del")];
+        const tableContainerLeftPosition = tableContainer.getBoundingClientRect().left;
+        const tableContainerTopPosition = tableContainer.getBoundingClientRect().top;
+        tableContainer.addEventListener("click", (e) => {
+            const {target} = e;
+            const rows = [...tableContainer.querySelectorAll("tr")];
+            this.constructor.addRow(target, table, tableContainer);
+            this.constructor.addCol(target, rows);
+            this.constructor.delRow(target, table, delRowButton);
+            this.constructor.delCol(target, rows, delColButton);
+        });
+        tableContainer.addEventListener("mouseover", (e) => {
+            const {target, currentTarget} = e;
+            const rowsLength = tableContainer.querySelector("tbody").rows.length;
+            const colsLength = tableContainer.querySelector("tr").cells.length;
+            if(target !== currentTarget && !target.classList.contains('add')) {
+                delButtons.forEach((item) => item.classList.add("show"))
             }
             if (target.tagName === "TD") {
-                this.constructor.moveH(target, tableContainer);
-                this.constructor.moveV(target, tableContainer);
+                this.constructor.moveH(target, tableContainerLeftPosition, delColButton);
+                this.constructor.moveV(target, tableContainerTopPosition, delRowButton);
             }
             if (rowsLength === 1) {
                 delRowButton.classList.remove("show")
@@ -49,85 +42,62 @@ class Table {
             if (colsLength === 1) {
                 delColButton.classList.remove("show")
             }
-        };
-        tableContainer.onmouseout = (e) => {
-            let target = e.relatedTarget;
-            if(!target.classList.contains("add")) {
-                let delButtons = [...tableContainer.querySelectorAll(".del")];
-                delButtons.forEach((index) => {
-                    index.classList.remove("show");
-                })
+        });
+        tableContainer.addEventListener("mouseout", (e) => {
+            let {relatedTarget} = e;
+            if(relatedTarget === null || !relatedTarget.classList.contains("add")) {
+                delButtons.forEach((item) => item.classList.remove("show"))
             }
-        }
-    }
-    static createButtons(container) {
-        let btnClass = [["add", "add_row"], ["add", "add_col"], ["del", "del_row"], ["del", "del_col"]];
-        btnClass.forEach((index) => {
-            let newButton = document.createElement("button");
-            index.forEach((item) => {
-                switch (item) {
-                    case "add":
-                        newButton.innerHTML = "&#43;";
-                        break;
-                    case "del":
-                        newButton.innerHTML = "&ndash;";
-                        break;
-                }
-                container.appendChild(newButton).classList.add("button", item);
-            })
         });
     }
-    static addRow(target, tbody, tableContainer) {
+    static createButtons(tableContainer) {
+        const btnClass = [
+            ["add", "add_row", "&#43;"],
+            ["add", "add_col", "&#43;"],
+            ["del", "del_row", "&ndash;"],
+            ["del", "del_col", "&ndash;"]
+        ];
+        let newButton;
+        btnClass.forEach((item) => {
+            newButton = document.createElement("button");
+            newButton.innerHTML = item[2];
+            tableContainer.appendChild(newButton).classList.add("button", item[0], item[1]);
+        });
+    }
+    static addRow(target, table, tableContainer) {
+        const cells = [...tableContainer.querySelector("tr").cells];
+        const frag = document.createDocumentFragment();
         if(target.classList.contains("add_row")) {
-            let frag = document.createDocumentFragment();
-            let cells = [...tableContainer.querySelector("tr").cells];
-            cells.forEach(() => {
-                let td =  document.createElement("td");
-                frag.appendChild(td);
-            });
-            tbody.insertRow().appendChild(frag);
+            cells.forEach(() => frag.appendChild(document.createElement("td")));
+            table.insertRow().appendChild(frag);
         }
     }
-    static addCol(target, tableContainer) {
+    static addCol(target, rows) {
         if( target.classList.contains("add_col")) {
-            let rows = [...tableContainer.querySelectorAll("tr")];
-            rows.forEach((index) => {
-                index.insertCell();
-            });
+            rows.forEach((item) => item.insertCell());
         }
     }
-    static delRow(target, tbody, tableContainer) {
+    static delRow(target, table, delRowButton) {
         if(target.classList.contains("del_row")) {
-            let delRow = tableContainer.querySelector(".del_row");
-            let attr = delRow.getAttribute("data-row");
-            tbody.deleteRow(attr);
-            delRow.classList.remove("show");
+            table.deleteRow(delRowButton.getAttribute("data-row"));
+            delRowButton.classList.remove("show");
         }
     }
-    static delCol(target, tableContainer) {
+    static delCol(target, rows, delColButton) {
         if( target.classList.contains("del_col")) {
-            let delCol = tableContainer.querySelector(".del_col");
-            let attr = delCol.getAttribute("data-col");
-            let rows = [...tableContainer.querySelectorAll("tr")];
-            rows.forEach((index) => {
-                index.deleteCell(+attr);
-            });
-            delCol.classList.remove("show");
+            rows.forEach((item) => item.deleteCell(+delColButton.getAttribute("data-col")));
+            delColButton.classList.remove("show");
         }
     }
-    static moveH(target, tableContainer) {
-        let leftPosition = tableContainer.querySelector("td").getBoundingClientRect().left;
-        let button = tableContainer.querySelector(".del_col");
-        let targetPosition = target.getBoundingClientRect().left;
-        button.style.left = targetPosition  - leftPosition + "px";
-        button.setAttribute("data-col", target.cellIndex);
+    static moveH(target, tableContainerLeftPosition, delColButton) {
+        const targetPosition = target.getBoundingClientRect().left;
+        delColButton.style.left = `${targetPosition - tableContainerLeftPosition}px`;
+        delColButton.setAttribute("data-col", target.cellIndex);
     }
-    static moveV(target, tableContainer) {
-        let topPosition = tableContainer.querySelector("td").getBoundingClientRect().top;
-        let button = tableContainer.querySelector(".del_row");
-        let targetPosition = target.getBoundingClientRect().top;
-        button.style.top = targetPosition - topPosition + "px";
-        button.setAttribute("data-row", target.closest("tr").rowIndex);
+    static moveV(target, tableContainerTopPosition, delRowButton) {
+        const targetPosition = target.getBoundingClientRect().top;
+        delRowButton.style.top = `${targetPosition - tableContainerTopPosition}px`;
+        delRowButton.setAttribute("data-row", target.closest("tr").rowIndex);
     }
 }
 
