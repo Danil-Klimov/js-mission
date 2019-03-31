@@ -11,7 +11,7 @@ body {
 }
 
 /* table */
-.table__container {
+.table-container {
     --main-color: #48aae6;
     --add-button-color: #f3a500;
     --add-button-hover-color: #f6c052;
@@ -19,25 +19,18 @@ body {
     --del-button-hover-color: #ca4c49;
     display: inline-block;
     position: relative;
-    padding: 50px;
+    margin: 60px;
+    width: max-content;
 }
 .table {
-    border-spacing: 2px;
- }
-.table tbody {
-    display: block;
     border: 1px solid var(--main-color);
-}
+ }
 .table tr td {
-    width: 50px;
-    height: 50px;
     background-color: var(--main-color);
 }
 
 /* buttons */
-.button {
-    width: 50px;
-    height: 50px;
+.table__button {
     border: none;
     color: #fff;
     padding: 0;
@@ -46,33 +39,38 @@ body {
     cursor: pointer;
     font-size: 18px;
 }
-.add {
+.table__button, .table tr td {
+    width: 50px;
+    height: 50px;
+}
+.table__button_add {
     background-color: var(--add-button-color);
 }
-.add:hover {
+.table__button_add:hover {
     background-color: var(--add-button-hover-color);
 }
-.add_row {
-    left: 55px;
+.table__button_add-row {
+    top: calc(100% + 2px);
+    left: 3px;
 }
-.add_col {
-    right: 0;
-    top: 55px;
+.table__button_add-col {
+    left: calc(100% + 2px);
+    top: 3px;
 }
-.del {
+.table__button_del {
     background-color: var(--del-button-color);
     display: none;
 }
-.del:hover {
+.table__button_del:hover {
     background-color: var(--del-button-hover-color);
 }
-.del_row {
-    left: 0;
-    top: 55px;
+.table__button_del-row {
+    top: 3px;
+    right: calc(100% + 2px);
 }
-.del_col {
-    top: 0;
-    left: 55px;
+.table__button_del-col {
+    left: 3px;
+    bottom: calc(100% + 2px);
 }
 .show {
     display: block;
